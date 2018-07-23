@@ -3,7 +3,5 @@ dependencies {
     	 changing = true 
   	}
   	compile("org.onebusaway:onebusaway-gtfs:1.3.21-SNAPSHOT")
-    compile("com.github.skjolber.unzip-csv:core:${unzipCsvVersion}")
-  	compile("com.github.skjolber.gtfs-dao:core:1.0.0-SNAPSHOT")
 }
 

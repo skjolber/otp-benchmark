@@ -18,7 +18,6 @@ subprojects {
     
     ext {
         otpVersion = '1.3.0-SNAPSHOT'
-        unzipCsvVersion = '1.0.0-SNAPSHOT'
     }
     
     repositories {
