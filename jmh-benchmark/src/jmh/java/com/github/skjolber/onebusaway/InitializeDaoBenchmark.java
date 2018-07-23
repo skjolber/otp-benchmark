@@ -25,22 +25,22 @@ public class InitializeDaoBenchmark {
 
 	@Benchmark
 	@BenchmarkMode(Mode.SingleShotTime)
-    public Object oldExample(BenchmarkState state) throws Exception {
-        return GtfsLibrary.readGtfs(new File("/home/skjolber/Nedlastinger/example.zip"));
-    }
+	public Object oldExample(BenchmarkState state) throws Exception {
+		return GtfsLibrary.readGtfs(new File("/home/skjolber/Nedlastinger/example.zip"));
+	}
 
-    @Benchmark
+	@Benchmark
 	@BenchmarkMode(Mode.SingleShotTime)
-    public Object newExample(BenchmarkState state) throws Exception {
-    	
+	public Object newExample(BenchmarkState state) throws Exception {
+
 		ParallellGtfsRelationalDaoImpl dao = new ParallellGtfsRelationalDaoImpl();
-		
+
 		GtfsCsvFileEntryHandler gtfsCsvFileEntryHandler = new GtfsCsvFileEntryHandler(dao);
-		
+
 		FileEntryHandler handler = new NewLineSplitterEntryHandler(16 * 1024 * 1024, gtfsCsvFileEntryHandler);
-		
+
 		File file = new File("/home/skjolber/Nedlastinger/example.zip");
-		
+
 		List<String> files = new ArrayList<>();
 		files.add("agency.txt");
 		files.add("block.txt");
@@ -55,7 +55,7 @@ public class InitializeDaoBenchmark {
 		files.add("fare_attributes.txt");
 		files.add("fare_rules.txt");
 		files.add("frequencies.txt");
-		
+
 		int count = Runtime.getRuntime().availableProcessors();
 
 		ZipFileEngine engine = new ZipFileEngine(handler, count);
@@ -65,20 +65,20 @@ public class InitializeDaoBenchmark {
 				System.out.println("Got feed info");
 				if(engine.handle(new FileZipFileFactory(file), files)) {
 					System.out.println("Got feed info");
-				
+
 					boolean handle = engine.handle(new FileZipFileFactory(file), Arrays.asList("transfers.txt"));
 					if(handle) {
 						System.out.println("Success");
-						
-				        CalendarService calendarService = GtfsLibrary.createCalendarService(dao);
 
-				        GtfsReader reader = new GtfsReader();
-				        reader.setInputLocation(file);
-				        reader.setEntityStore(dao);
+						CalendarService calendarService = GtfsLibrary.createCalendarService(dao);
 
-				        GtfsFeedId feedId = new GtfsFeedId.Builder().fromGtfsFeed(reader.getInputSource()).build();
-				        
-				        return new GtfsContextImpl(feedId, dao, calendarService);
+						GtfsReader reader = new GtfsReader();
+						reader.setInputLocation(file);
+						reader.setEntityStore(dao);
+
+						GtfsFeedId feedId = new GtfsFeedId.Builder().fromGtfsFeed(reader.getInputSource()).build();
+
+						return new GtfsContextImpl(feedId, dao, calendarService);
 					}
 				}
 			}
@@ -86,36 +86,36 @@ public class InitializeDaoBenchmark {
 			engine.close();
 		}
 		throw new RuntimeException();
-    }
+	}
 
 	private static class GtfsContextImpl implements GtfsContext {
-		
-	    private GtfsFeedId _feedId;
-	
-	    private GtfsRelationalDao _dao;
-	
-	    private CalendarService _calendar;
-	    
-	    public GtfsContextImpl(GtfsFeedId feedId, GtfsRelationalDao dao, CalendarService calendar) {
-	        _feedId = feedId;
-	        _dao = dao;
-	        _calendar = calendar;
-	    }
-	
-	    @Override
-	    public GtfsFeedId getFeedId() {
-	        return _feedId;
-	    }
-	
-	    @Override
-	    public GtfsRelationalDao getDao() {
-	        return _dao;
-	    }
-	
-	    @Override
-	    public CalendarService getCalendarService() {
-	        return _calendar;
-	    }
+
+		private GtfsFeedId _feedId;
+
+		private GtfsRelationalDao _dao;
+
+		private CalendarService _calendar;
+
+		public GtfsContextImpl(GtfsFeedId feedId, GtfsRelationalDao dao, CalendarService calendar) {
+			_feedId = feedId;
+			_dao = dao;
+			_calendar = calendar;
+		}
+
+		@Override
+		public GtfsFeedId getFeedId() {
+			return _feedId;
+		}
+
+		@Override
+		public GtfsRelationalDao getDao() {
+			return _dao;
+		}
+
+		@Override
+		public CalendarService getCalendarService() {
+			return _calendar;
+		}
 	}
 
 }
