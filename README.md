@@ -13,10 +13,23 @@ The project is based on [Gradle].
 Modify the build version to your current snapshot, then run 
 
 ```
+./gradlew clean jmhClasses jmh --info
+```
+
+If the JMH plugin seems to have trouble refreshing the project, restart the Gradle deamon before running:
+
+```
+./gradlew --stop && ./gradlew clean jmhClasses jmh --info
+```
+
+And also optionally refresh the dependencies using
+
+```
 ./gradlew --stop && ./gradlew clean jmhClasses jmh --refresh-dependencies --info
 ```
 
-The JMH plugin seems to have trouble refreshing the project, so restart the Gradle deamon before running.
+Open the file `./jmh-benchmark/build/reports/jmh/index.html` to view a visualization of the results.
+
 ## Benchmarks
 
   * Load GTFS feed (from ZIP archive) - single shot
