@@ -1,0 +1,8 @@
+jmh {
+    include = ".+Bench.*"
+}
+
+dependencies {
+    jmh project(":jmh-utils")
+}
+

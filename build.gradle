@@ -1,0 +1,90 @@
+plugins {
+    id 'me.champeau.gradle.jmh' version '0.4.7' apply false
+    id 'com.github.ben-manes.versions' version '0.17.0' apply false
+    id 'org.owasp.dependencycheck' version '3.2.1' apply false
+    id 'com.github.spotbugs' version '1.6.2' apply false    
+    id 'io.morethan.jmhreport' version '0.7.0' apply false
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'com.github.ben-manes.versions'
+    apply plugin: 'org.owasp.dependencycheck'
+    apply plugin: 'com.github.spotbugs'
+    apply plugin: 'maven'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    
+    ext {
+        otpVersion = '1.3.0-SNAPSHOT'
+        unzipCsvVersion = '1.0.0-SNAPSHOT'
+    }
+    
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+}
+
+configure(project(':jmh-benchmark')) {
+    apply plugin: 'io.morethan.jmhreport'
+    apply plugin: 'me.champeau.gradle.jmh'
+
+    jmh {
+        resultFormat = 'JSON'
+        
+        fork = 1
+        
+        jvmArgs = ['-XX:+UseG1GC']
+    }
+    
+    jmhReport {
+        jmhResultPath = project.file("build/reports/jmh/results.json")
+        jmhReportOutput = project.file("build/reports/jmh")
+    }
+    
+    tasks.jmh.finalizedBy tasks.jmhReport
+    
+	configurations.all {
+	    // Check for updates every build
+	    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+	}    
+}
+
+allprojects {
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+
+    eclipse {
+        classpath {
+            downloadSources = true
+            downloadJavadoc = true
+        }
+    }
+
+    // Tell idea to output to build/classes/main instead of /out/
+    idea {
+        module {
+            outputDir file('build/classes/main')
+            testOutputDir file('build/classes/test')
+        }
+    }
+
+	repositories {
+	    mavenLocal()
+	    maven { url 'https://download.osgeo.org/webdav/geotools/' }
+	    jcenter()
+	    maven { url "https://download.java.net/maven/2" }
+	    maven { url "https://people.apache.org/repo/m1-ibiblio-rsync-repository/org.apache.axis2" }
+	    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+	    maven { url "https://repo.boundlessgeo.com/main/" }
+	    maven { url "https://maven.conveyal.com/" }
+	    maven { url "https://dl.bintray.com/andimarek/graphql-java" }
+	}
+
+    
+}
+
+
+
