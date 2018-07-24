@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/skjolber/otp-benchmark.svg?branch=master)](https://travis-ci.org/skjolber/otp-benchmark)
-
 # otp-benchmark
 Project for benchmarking popular open source project [Open Trip Planner] using [JMH].
 
