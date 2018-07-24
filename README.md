@@ -3,6 +3,7 @@
 # otp-benchmark
 Project for benchmarking popular open source project [Open Trip Planner] using [JMH].
 
+Bugs, feature suggestions and help requests can be filed with the [issue-tracker].
 ## License
 [Apache 2.0]
 
