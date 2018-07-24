@@ -35,7 +35,7 @@ configure(project(':jmh-benchmark')) {
         
         fork = 1
         
-        jvmArgs = ['-XX:+UseG1GC']
+        jvmArgs = ['-XX:+UseG1GC', '-Xverify:none']
     }
     
     jmhReport {

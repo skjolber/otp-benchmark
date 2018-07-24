@@ -11,13 +11,16 @@ import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Warmup;
 import org.opentripplanner.gtfs.GtfsLibrary;
 
-public class InitializeDaoBenchmark {
+public class PlanBenchmark {
 
+	/*
 	@Benchmark
-	@BenchmarkMode(Mode.SingleShotTime)
+	@BenchmarkMode(Mode.SampleTime)
+	@OutputTimeUnit(TimeUnit.MILLISECONDS)
+	@Measurement(time = 24, timeUnit = TimeUnit.HOURS, batchSize = 1)
 	@Warmup(iterations = 0)
-	public Object oldExample(BenchmarkState state) throws Exception {
+	public Object plan(BenchmarkState state) throws Exception {
 		return GtfsLibrary.readGtfs(new File("./resources/rb_rut-aggregated-gtfs.zip"));
 	}
-
+	*/
 }
