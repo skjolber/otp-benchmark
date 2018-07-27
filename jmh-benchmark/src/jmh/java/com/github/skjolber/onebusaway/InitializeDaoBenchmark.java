@@ -4,15 +4,19 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.onebusaway.gtfs.serialization.GtfsReader;
 import org.onebusaway.gtfs.services.GtfsRelationalDao;
 import org.onebusaway.gtfs.services.calendar.CalendarService;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Mode;
 import org.opentripplanner.graph_builder.module.GtfsFeedId;
 import org.opentripplanner.gtfs.GtfsContext;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Warmup;
 import org.opentripplanner.gtfs.GtfsLibrary;
 
 import com.github.skjolber.onebusaway.factory.GtfsCsvFileEntryHandler;
@@ -25,6 +29,7 @@ public class InitializeDaoBenchmark {
 
 	@Benchmark
 	@BenchmarkMode(Mode.SingleShotTime)
+	@Warmup(iterations = 0)
 	public Object oldExample(BenchmarkState state) throws Exception {
 		return GtfsLibrary.readGtfs(new File("/home/skjolber/Nedlastinger/example.zip"));
 	}
