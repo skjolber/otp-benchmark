@@ -33,6 +33,7 @@ public class InitializeDaoBenchmark {
 	
 	@Benchmark
 	@BenchmarkMode(Mode.SingleShotTime)
+	@OutputTimeUnit(TimeUnit.MILLISECONDS)
 	@Warmup(iterations = 0)
 	public Object oldExample(BenchmarkState state) throws Exception {
 		return GtfsLibrary.readGtfs(file);
@@ -40,6 +41,7 @@ public class InitializeDaoBenchmark {
 
 	@Benchmark
 	@BenchmarkMode(Mode.SingleShotTime)
+	@OutputTimeUnit(TimeUnit.MILLISECONDS)
 	@Warmup(iterations = 0)
 	public Object newExample32(BenchmarkState state) throws Exception {
 		return load(32);
@@ -47,6 +49,7 @@ public class InitializeDaoBenchmark {
 
 	@Benchmark
 	@BenchmarkMode(Mode.SingleShotTime)
+	@OutputTimeUnit(TimeUnit.MILLISECONDS)
 	@Warmup(iterations = 0)
 	public Object newExample64(BenchmarkState state) throws Exception {
 		return load(64);
@@ -54,6 +57,7 @@ public class InitializeDaoBenchmark {
 
 	@Benchmark
 	@BenchmarkMode(Mode.SingleShotTime)
+	@OutputTimeUnit(TimeUnit.MILLISECONDS)
 	@Warmup(iterations = 0)
 	public Object newExample48(BenchmarkState state) throws Exception {
 		return load(48);
@@ -61,6 +65,7 @@ public class InitializeDaoBenchmark {
 
 	@Benchmark
 	@BenchmarkMode(Mode.SingleShotTime)
+	@OutputTimeUnit(TimeUnit.MILLISECONDS)
 	@Warmup(iterations = 0)
 	public Object newExample16(BenchmarkState state) throws Exception {
 		return load(16);
