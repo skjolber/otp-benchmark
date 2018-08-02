@@ -1,6 +1,7 @@
 package com.github.skjolber.onebusaway;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.opentripplanner.gtfs.GtfsContext;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Warmup;
 import org.opentripplanner.gtfs.GtfsLibrary;
+import org.opentripplanner.model.impl.OtpTransitBuilder;
 
 import com.github.skjolber.onebusaway.factory.GtfsCsvFileEntryHandler;
 import com.github.skjolber.unzip.FileEntryHandler;
@@ -27,24 +29,51 @@ import com.github.skjolber.unzip.ZipFileEngine;
 
 public class InitializeDaoBenchmark {
 
+	private static final File file = new File("./resources/rb_rut-aggregated-gtfs.zip");
+	
 	@Benchmark
 	@BenchmarkMode(Mode.SingleShotTime)
 	@Warmup(iterations = 0)
 	public Object oldExample(BenchmarkState state) throws Exception {
-		return GtfsLibrary.readGtfs(new File("/home/skjolber/Nedlastinger/example.zip"));
+		return GtfsLibrary.readGtfs(file);
 	}
 
 	@Benchmark
 	@BenchmarkMode(Mode.SingleShotTime)
-	public Object newExample(BenchmarkState state) throws Exception {
+	@Warmup(iterations = 0)
+	public Object newExample32(BenchmarkState state) throws Exception {
+		return load(32);
+	}
 
-		ParallellGtfsRelationalDaoImpl dao = new ParallellGtfsRelationalDaoImpl();
+	@Benchmark
+	@BenchmarkMode(Mode.SingleShotTime)
+	@Warmup(iterations = 0)
+	public Object newExample64(BenchmarkState state) throws Exception {
+		return load(64);
+	}
 
+	@Benchmark
+	@BenchmarkMode(Mode.SingleShotTime)
+	@Warmup(iterations = 0)
+	public Object newExample48(BenchmarkState state) throws Exception {
+		return load(48);
+	}
+
+	@Benchmark
+	@BenchmarkMode(Mode.SingleShotTime)
+	@Warmup(iterations = 0)
+	public Object newExample16(BenchmarkState state) throws Exception {
+		return load(16);
+	}
+
+	private Object load(int size) throws IOException {
+		OtpTransitBuilder dao = new OtpTransitBuilder();
+		
 		GtfsCsvFileEntryHandler gtfsCsvFileEntryHandler = new GtfsCsvFileEntryHandler(dao);
 
-		FileEntryHandler handler = new NewLineSplitterEntryHandler(16 * 1024 * 1024, gtfsCsvFileEntryHandler);
+		int chunkLength = size * 1024 * 1024;
 
-		File file = new File("/home/skjolber/Nedlastinger/example.zip");
+		FileEntryHandler handler = new NewLineSplitterEntryHandler(chunkLength, gtfsCsvFileEntryHandler);
 
 		List<String> files = new ArrayList<>();
 		files.add("agency.txt");
@@ -75,15 +104,7 @@ public class InitializeDaoBenchmark {
 					if(handle) {
 						System.out.println("Success");
 
-						CalendarService calendarService = GtfsLibrary.createCalendarService(dao);
-
-						GtfsReader reader = new GtfsReader();
-						reader.setInputLocation(file);
-						reader.setEntityStore(dao);
-
-						GtfsFeedId feedId = new GtfsFeedId.Builder().fromGtfsFeed(reader.getInputSource()).build();
-
-						return new GtfsContextImpl(feedId, dao, calendarService);
+						return dao.build();
 					}
 				}
 			}
